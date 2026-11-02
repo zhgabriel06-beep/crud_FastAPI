@@ -40,11 +40,47 @@ def read_users():
     return {'users': database}
 
 
+@app.get(
+    '/users/{user_id}', status_code=HTTPStatus.OK, response_model=UserPublic
+)
+def read_user(user_id: int, user: Userschema):
+    if user_id < 1 or user_id > len(database):
+        raise HTTPException(
+            status_code=HTTPStatus.NO_CONTENT, detail='User not found...'
+        )
+    return user_id
+
+
 @app.put(
-    '/user/{user_id}', status_code=HTTPStatus.OK, response_model=UserPublic
+    '/user/{user_id}',
+    status_code=HTTPStatus.OK,
+    response_model=UserPublic,
 )
 def update_user(user_id: int, user: Userschema):
-    user_with_id = Userdb(**user.model_dump(), id=user_id)
+    # Verifica se o usuário existe
+    if user_id < 1 or user_id > len(database):
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail='User not found...'
+        )
+
+    # Cria o usuário atualizado
+    user_with_id = Userdb(
+        **user.model_dump(),
+        id=user_id,
+    )
+
+    # Substitui o usuário antigo
+    database[user_id - 1] = user_with_id
+
+    # Retorna o usuário atualizado
+    return user_with_id
+
+
+@app.delete(
+    '/user/{user_id}', status_code=HTTPStatus.OK, response_model=UserPublic
+)
+def delete_user(user_id: int):
     if user_id < 1 or user_id > len(database):
         raise HTTPException(HTTPStatus.NOT_FOUND, detail='User not found...')
-    database[user_id - 1] = user_with_id
+    else:
+        return database.pop(user_id - 1)

@@ -18,8 +18,8 @@ Projeto de uma API REST desenvolvida com Python e FastAPI para praticar o desenv
 - [x] Cadastro de usuários
 - [x] Listagem de usuários
 - [x] Atualização de usuários
-- [ ] Exclusão de usuários
-- [ ] Integração com banco de dados
+- [x] Exclusão de usuários
+- [x] Integração com banco de dados
 
 ## ▶️ Como executar
 
