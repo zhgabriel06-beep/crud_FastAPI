@@ -1,8 +1,8 @@
-# FastAPI Zero 🚀
+# FastAPI Zero 
 
 Projeto de uma API REST desenvolvida com Python e FastAPI para praticar o desenvolvimento Back-End.
 
-🚧 **Status:** Em desenvolvimento.
+**Status:** Em desenvolvimento.
 
 ## 🛠️ Tecnologias
 
@@ -21,7 +21,7 @@ Projeto de uma API REST desenvolvida com Python e FastAPI para praticar o desenv
 - [x] Exclusão de usuários
 - [x] Integração com banco de dados
 
-## ▶️ Como executar
+## Como executar
 
 Instale as dependências:
 
@@ -35,13 +35,13 @@ Execute a aplicação:
 poetry run task run
 ```
 
-## 📚 Documentação
+## Documentação
 
 Com a aplicação em execução, acesse:
 
 http://127.0.0.1:8000/docs
 
-## 🎯 Objetivo
+## Objetivo
 
 Projeto desenvolvido para praticar a criação de APIs, operações CRUD, validação de dados e testes automatizados com Python.
 
