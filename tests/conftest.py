@@ -12,23 +12,32 @@ from fastapi.testclient import TestClient
 
 # create_engine: cria a conexão com o banco de dados.
 # event: permite executar funções em determinados eventos do SQLAlchemy.
-from sqlalchemy import create_engine, event
+from sqlalchemy import StaticPool, create_engine, event
 
 # Session: gerencia as operações com o banco de dados.
 from sqlalchemy.orm import Session
 
-from fastapi_zero.app import app
+from fast_zero.app import app
 
 # User: modelo da tabela de usuários.
 # table_registry: registro que armazena os metadados das tabelas.
-from fastapi_zero.models import User, table_registry
+from fast_zero.database import get_session
+from fast_zero.models import User, table_registry
 
 
 # Fixture que disponibiliza um cliente de testes para a aplicação.
 # Assim, podemos fazer requisições HTTP nos testes sem iniciar o servidor.
 @pytest.fixture
-def cliente():
-    return TestClient(app)
+def client(session: Session):
+    def get_session_override():
+        yield session
+
+    app.dependency_overrides[get_session] = get_session_override
+
+    with TestClient(app) as test_client:
+        yield test_client
+
+    app.dependency_overrides.clear()
 
 
 # Fixture que cria uma sessão de banco de dados para cada teste.
@@ -37,7 +46,11 @@ def session():
     # Cria um banco SQLite em memória.
     # ATENÇÃO: o correto é ':memory:' (com dois-pontos no final).
     # Sem o ':' final, o SQLite cria um arquivo chamado ':memory' no disco.
-    engine = create_engine('sqlite:///:memory:')
+    engine = create_engine(
+        'sqlite:///:memory:',
+        connect_args={'check_same_thread': False},
+        poolclass=StaticPool,
+    )
 
     # Cria todas as tabelas definidas no table_registry.
     table_registry.metadata.create_all(engine)
@@ -100,3 +113,13 @@ def mock_db_time(model=User, time=datetime(2026, 1, 1)):
 @pytest.fixture
 def mock_time():
     return mock_db_time
+
+
+@pytest.fixture
+def user(session: Session):
+    user = User(username='Teste', email='Teste@teste.com', password='1234')
+    session.add(user)
+    session.commit()
+    session.refresh(user)
+
+    return user

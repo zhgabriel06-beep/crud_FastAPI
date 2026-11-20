@@ -43,7 +43,7 @@ pythonpath = "."
 addopts = '-p no:warnings'
 
 [tool.taskipy.tasks]
-run = 'fastapi dev fastapi_zero/app.py'
+run = 'fastapi dev fast_zero/app.py'
 lint = 'ruff check .'
 format = 'ruff check . --fix && ruff format .'
-test = 'pytest -s -x --cov=fastapi_zero -vv'
+test = 'pytest -s -x --cov=fast_zero -vv'
