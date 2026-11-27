@@ -4,7 +4,6 @@ from contextlib import contextmanager
 
 # Importa datetime para trabalhar com datas e horários.
 from datetime import datetime
-from urllib import response
 
 import pytest
 
@@ -18,13 +17,13 @@ from sqlalchemy import StaticPool, create_engine, event
 # Session: gerencia as operações com o banco de dados.
 from sqlalchemy.orm import Session
 
-from fast_zero.pycache.app import app
+from fast_zero.app import app
 
 # User: modelo da tabela de usuários.
 # table_registry: registro que armazena os metadados das tabelas.
-from fast_zero.pycache.database import get_session
-from fast_zero.pycache.models import User, table_registry
-from fast_zero.pycache.security import get_password_hash
+from fast_zero.database import get_session
+from fast_zero.models import User, table_registry
+from fast_zero.security import get_password_hash
 
 
 # Fixture que disponibiliza um cliente de testes para a aplicação.
@@ -137,7 +136,7 @@ def user(session: Session):
 @pytest.fixture
 def token(client, user):
     response = client.post(
-        '/token/',
+        '/auth/token/',
         data={'username': user.email, 'password': user.clean_password},
     )
     return response.json()['access_token']

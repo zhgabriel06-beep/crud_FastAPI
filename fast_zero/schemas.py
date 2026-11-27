@@ -21,8 +21,6 @@ class UserPublic(BaseModel):
 
 
 # Representação do usuário armazenado
-class UserDB(UserSchema):
-    id: int
 
 
 # Resposta com vários usuários
